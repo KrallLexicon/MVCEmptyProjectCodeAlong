@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>@Html.ActionLink("Home", "Index", "Home")</div>
+    <div>@Html.ActionLink("Test", "Test", "Home")</div>
+    <div>@Html.ActionLink("Person index", "Index", "Person")</div>
+    <div>@Html.ActionLink("Check person", "CheckPerson", "Person")</div>
+    <div>@Html.ActionLink("Set session", "SetSession", "Person")</div>
+    <div>
+        @RenderBody()
+    </div>
+    <footer>@DateTime.Now.Year</footer>
+</body>
+</html>
