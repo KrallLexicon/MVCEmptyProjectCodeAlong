@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MVCEmptyProject.Data;
 using MVCEmptyProject.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,11 @@ namespace MVCEmptyProject.Controllers
 {
     public class PersonController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        public PersonController(ApplicationDbContext context)
+        {
+            _context = context; 
+        }
         public IActionResult Index()
         {
             return View();
@@ -44,9 +50,11 @@ namespace MVCEmptyProject.Controllers
 
         public IActionResult ListPeople()
         {
-            if (Person.listOfPeople.Count == 0)
-                Person.GeneratePeople();
-            return View(Person.listOfPeople);
+            //if (Person.listOfPeople.Count == 0)
+            //    Person.GeneratePeople();
+            //return View(Person.listOfPeople);
+            
+            return View(_context.People.ToList()); 
         }
 
         public IActionResult AddPerson()
@@ -56,15 +64,26 @@ namespace MVCEmptyProject.Controllers
         [HttpPost]
         public IActionResult AddPerson(Person person)
         {
-            person.Id = Person.nextId;
-            Person.nextId++;
-            Person.listOfPeople.Add(person);
+            //person.Id = Person.nextId;
+            //Person.nextId++;
+            //Person.listOfPeople.Add(person);
+            if(ModelState.IsValid)
+            {
+                _context.People.Add(person);
+                _context.SaveChanges(); 
+            }
+
             return RedirectToAction("ListPeople");
         }
         public IActionResult DeletePerson(int id)
         {
-            var person = Person.listOfPeople.Find(x => x.Id == id);
-            Person.listOfPeople.Remove(person);
+            //var person = Person.listOfPeople.Find(x => x.Id == id);
+            //Person.listOfPeople.Remove(person);
+
+            var personToDelete = _context.People.Find(id);
+            _context.People.Remove(personToDelete);
+            _context.SaveChanges(); 
+
             return RedirectToAction("ListPeople");
         }
     }
