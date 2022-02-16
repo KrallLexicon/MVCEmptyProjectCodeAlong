@@ -41,5 +41,31 @@ namespace MVCEmptyProject.Controllers
             ViewBag.Message = HttpContext.Session.GetString("Test");
             return View(); 
         }
+
+        public IActionResult ListPeople()
+        {
+            if (Person.listOfPeople.Count == 0)
+                Person.GeneratePeople();
+            return View(Person.listOfPeople);
+        }
+
+        public IActionResult AddPerson()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddPerson(Person person)
+        {
+            person.Id = Person.nextId;
+            Person.nextId++;
+            Person.listOfPeople.Add(person);
+            return RedirectToAction("ListPeople");
+        }
+        public IActionResult DeletePerson(int id)
+        {
+            var person = Person.listOfPeople.Find(x => x.Id == id);
+            Person.listOfPeople.Remove(person);
+            return RedirectToAction("ListPeople");
+        }
     }
 }
