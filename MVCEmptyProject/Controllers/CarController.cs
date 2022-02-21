@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVCEmptyProject.Data;
 using MVCEmptyProject.Models;
 using System;
@@ -20,6 +21,7 @@ namespace MVCEmptyProject.Controllers
         {
             return View(_context.Cars.ToList());
         }
+        [Authorize(Roles ="Admin")]
         public IActionResult CreateCar()
         { 
             return View(); 

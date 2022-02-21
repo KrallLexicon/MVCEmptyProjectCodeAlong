@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MVCEmptyProject.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace MVCEmptyProject
 {
@@ -31,8 +33,15 @@ namespace MVCEmptyProject
             services.AddHttpContextAccessor();
             services.AddSession();
 
+            services.AddRazorPages();
+
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddDefaultUI()
+                    .AddDefaultTokenProviders()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +54,10 @@ namespace MVCEmptyProject
 
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseSession();
 
             app.UseEndpoints(endpoints =>
@@ -57,6 +70,7 @@ namespace MVCEmptyProject
                     name: "CheckPerson",
                     pattern: "CheckPerson",
                     defaults: new { controller = "Person", action = "CheckPerson" });
+                endpoints.MapRazorPages();
             });
         }
     }
