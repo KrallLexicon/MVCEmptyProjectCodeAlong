@@ -61,6 +61,17 @@ namespace MVCEmptyProject.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [Display(Name ="First name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last name")]
+            public string LastName { get; set; }
+
+            [Required]
+            public int Age { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -75,10 +86,12 @@ namespace MVCEmptyProject.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, 
+                    Age= Input.Age, FirstName = Input.FirstName, LastName = Input.LastName };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "User");
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

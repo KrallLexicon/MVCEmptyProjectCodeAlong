@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVCEmptyProject.Data;
 using MVCEmptyProject.Models;
@@ -48,6 +49,7 @@ namespace MVCEmptyProject.Controllers
             return View(); 
         }
 
+        [Authorize(Roles ="Admin")]
         public IActionResult ListPeople()
         {
             //if (Person.listOfPeople.Count == 0)
